@@ -5,6 +5,9 @@ metadata:
   labels:
     name: extkafka
 spec:
+  externalIPs:
+   - 192.168.1.45
+   - 192.168.1.44
   type: NodePort
   ports:
     - port: 9092

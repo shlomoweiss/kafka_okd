@@ -176,7 +176,7 @@ networkConfig:
   - cidr: 10.128.0.0/14
     hostSubnetLength: 9
   externalIPNetworkCIDRs:
-  - 0.0.0.0/0
+  - 192.168.1.0/24
   ingressIPNetworkCIDR: 172.29.0.0/16
   networkPluginName: redhat/openshift-ovs-subnet
   serviceNetworkCIDR: 172.30.0.0/16

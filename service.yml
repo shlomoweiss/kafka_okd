@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mykafka
+  name: mykafka
+  namespace: kafka-proj
+spec:
+  ports:
+    - name: 9092-tcp
+      port: 9092
+      protocol: TCP
+      targetPort: 9092
+  selector:
+    app: mykafka
+    deploymentconfig: mykafka
+  type: ClusterIP

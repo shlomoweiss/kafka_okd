@@ -1,0 +1,61 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: kafkacons
+  name: kafkacons
+spec:
+  replicas: 1
+  revisionHistoryLimit: 10
+  selector:
+    app: kafkacons
+    deploymentconfig: kafkacons
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      labels:
+        app: kafkacons
+        deploymentconfig: kafkacons
+    spec:
+      containers:
+        - args:
+            - ./consumer.app.js
+          command:
+            - node
+          env:
+            - name: KAFKA_HOST
+              value: 'mykafka:9092'
+          image: >-
+            shlomoweiss/kafka_prod_cons@sha256:115d745ba19482f9dcdf4500e5313e1d30967424ddb59d3deb90685e9bf6d2d1
+          imagePullPolicy: IfNotPresent
+          name: kafkacons
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - kafkacons
+        from:
+          kind: ImageStreamTag
+          name: 'kafkaprodcons:1.0.1.0'
+        lastTriggeredImage: >-
+          shlomoweiss/kafka_prod_cons@sha256:115d745ba19482f9dcdf4500e5313e1d30967424ddb59d3deb90685e9bf6d2d1
+      type: ImageChange

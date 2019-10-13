@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: extkafka
+  labels:
+    name: extkafka
+spec:
+  type: NodePort
+  ports:
+    - port: 9092
+      nodePort: 30036
+      name: tcp
+  selector:
+    app: mykafka
+    deploymentconfig: mykafka
